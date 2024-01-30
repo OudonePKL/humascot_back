@@ -402,12 +402,12 @@ class CartDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
 
-class CartByUserAPIView(generics.RetrieveAPIView):
+class CartByUserAPIView(generics.ListAPIView):
     serializer_class = CartSerializer
 
-    def get_object(self):
+    def get_queryset(self):
         user_id = self.kwargs.get('user_id')
-        return Cart.objects.get(user_id=user_id)
+        return Cart.objects.filter(user_id=user_id)
 
 class CartItemListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsSeller]
