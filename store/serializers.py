@@ -3,12 +3,17 @@ from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from store.models import StoreModel, GoodsModel, ReviewModel, OrderModel, ImageModel, Cart, CartItem, Bill, BillItem, Payment
+from store.models import CategoryModel, StoreModel, GoodsModel, ReviewModel, OrderModel, ImageModel, Cart, CartItem, Bill, BillItem, Payment
 from users.models import UserModel
 
 
 def format_with_commas(n):
     return "{:,}".format(int(n))
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CategoryModel
+        fields = '__all__'
 
 
 class GoodsSerializer(serializers.ModelSerializer):

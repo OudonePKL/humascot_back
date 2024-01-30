@@ -28,6 +28,7 @@ from .models import (
     Bill, BillItem, Payment
 )
 from .serializers import (
+    CategorySerializer,
     StoreSerializer,
     GoodsSerializer,
     ReviewSerializer,
@@ -61,6 +62,9 @@ class IsSeller(BasePermission):
             # If login
             return False
 
+class CategoryListCreateAPIView(generics.ListCreateAPIView):
+    queryset = CategoryModel.objects.all()
+    serializer_class = CategorySerializer
 
 class GoodsView(APIView):
     @swagger_auto_schema(tags=["View product list and details"], responses={200: "Success"})
@@ -398,6 +402,13 @@ class CartDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
 
+class CartByUserAPIView(generics.RetrieveAPIView):
+    serializer_class = CartSerializer
+
+    def get_object(self):
+        user_id = self.kwargs.get('user_id')
+        return Cart.objects.get(user_id=user_id)
+
 class CartItemListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsSeller]
 
@@ -420,6 +431,13 @@ class BillDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Bill.objects.all()
     serializer_class = BillSerializer
 
+class BillByUserAPIView(generics.ListAPIView):
+    serializer_class = BillSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs.get('user_id')
+        return Bill.objects.filter(user_id=user_id)
+
 class BillItemCreateView(generics.CreateAPIView):
     queryset = BillItem.objects.all()
     serializer_class = BillItemSerializer
@@ -431,5 +449,12 @@ class PaymentListCreateView(generics.ListCreateAPIView):
 class PaymentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
+
+class PaymentByUserAPIView(generics.ListAPIView):
+    serializer_class = PaymentSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs.get('user_id')
+        return Payment.objects.filter(user_id=user_id)
 
 
